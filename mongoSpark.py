@@ -19,9 +19,8 @@ if __name__ == "__main__":
 
     spark = SparkSession.builder.appName("MongoDBIntegration").getOrCreate()
 
-
-    lines = spark.sparkContext.textFile("hdfs:///user/maria_dev/mongodb/consumer_electronics_sales_data.csv")
-    
+    df = spark.read.option("header", "true").csv("hdfs:///user/maria_dev/mongodb/consumer_electronics_sales_data.csv")
+    lines = df.rdd.map(lambda row: ",".join(row))
 
     products = lines.map(parseInput)
     
