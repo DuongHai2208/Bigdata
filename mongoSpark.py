@@ -21,7 +21,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("MongoDBIntegration").getOrCreate()
 
     # Đọc dữ liệu từ HDFS hoặc tệp văn bản
-    lines = spark.sparkContext.textFile("hdfs:///path/to/your/data.csv")  # Đường dẫn tới tệp của bạn
+    lines = spark.sparkContext.textFile("hdfs:///user/maria_dev/mongodb/consumer_electronics_sales_data.csv")  # Đường dẫn tới tệp của bạn
     
     # Tạo RDD từ dữ liệu và áp dụng hàm parseInput
     products = lines.map(parseInput)
