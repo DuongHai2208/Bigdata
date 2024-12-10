@@ -1,7 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 
-# Hàm để phân tích dữ liệu từ dòng văn bản
 def parseInput(line):
     fields = line.split(',')
     return Row(
@@ -17,37 +16,37 @@ def parseInput(line):
     )
 
 if __name__ == "__main__":
-    # Tạo SparkSession
+
     spark = SparkSession.builder.appName("MongoDBIntegration").getOrCreate()
 
-    # Đọc dữ liệu từ HDFS hoặc tệp văn bản
-    lines = spark.sparkContext.textFile("hdfs:///user/maria_dev/mongodb/consumer_electronics_sales_data.csv")  # Đường dẫn tới tệp của bạn
+
+    lines = spark.sparkContext.textFile("hdfs:///user/maria_dev/mongodb/consumer_electronics_sales_data.csv")
     
-    # Tạo RDD từ dữ liệu và áp dụng hàm parseInput
+
     products = lines.map(parseInput)
     
-    # Chuyển đổi RDD thành DataFrame
+
     productsDataset = spark.createDataFrame(products)
 
-    # Ghi dữ liệu vào MongoDB
+
     productsDataset.write\
         .format("com.mongodb.spark.sql.DefaultSource")\
         .option("uri", "mongodb://127.0.0.1/moviesdata.products")\
         .mode('append')\
         .save()
 
-    # Đọc lại dữ liệu từ MongoDB
+
     readProducts = spark.read\
         .format("com.mongodb.spark.sql.DefaultSource")\
         .option("uri", "mongodb://127.0.0.1/moviesdata.products")\
         .load()
 
-    # Tạo một bảng tạm trong Spark SQL
+
     readProducts.createOrReplaceTempView("products")
 
-    # Thực hiện truy vấn SQL để chọn các sản phẩm có giá dưới 1000
+
     sqlDF = spark.sql("SELECT * FROM products WHERE ProductPrice < 1000")
     sqlDF.show()
 
-    # Dừng SparkSession
+
     spark.stop()
