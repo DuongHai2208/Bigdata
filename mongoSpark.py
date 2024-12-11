@@ -30,14 +30,14 @@ if __name__ == "__main__":
 
     productsDataset.write\
         .format("com.mongodb.spark.sql.DefaultSource")\
-        .option("uri", "mongodb://127.0.0.1/moviesdata.products")\
+        .option("uri", "mongodb://127.0.0.1/customerData.products")\
         .mode('append')\
         .save()
 
 
     readProducts = spark.read\
         .format("com.mongodb.spark.sql.DefaultSource")\
-        .option("uri", "mongodb://127.0.0.1/moviesdata.products")\
+        .option("uri", "mongodb://127.0.0.1/customerData.products")\
         .load()
 
 
