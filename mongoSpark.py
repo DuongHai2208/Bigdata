@@ -43,18 +43,7 @@ if __name__ == "__main__":
 
     readProducts.createOrReplaceTempView("products")
 
-
-    # 3. Grouping by multiple columns: Find the total purchase frequency per category and brand
-    print("Total purchase frequency per category and brand:")
-    total_purchase_frequency = spark.sql("""
-        SELECT ProductCategory, ProductBrand, SUM(PurchaseFrequency) AS total_purchase_frequency
-        FROM products
-        GROUP BY ProductCategory, ProductBrand
-        ORDER BY total_purchase_frequency DESC
-    """)
-    total_purchase_frequency.show()
-
-    # 4. Complex Filtering: Find products with high customer satisfaction and high purchase intent
+    # Complex Filtering: Find products with high customer satisfaction and high purchase intent
     print("High satisfaction and high purchase intent products:")
     high_satisfaction = spark.sql("""
         SELECT ProductID, ProductCategory, ProductBrand, ProductPrice, CustomerSatisfaction, PurchaseIntent
@@ -63,13 +52,6 @@ if __name__ == "__main__":
         ORDER BY CustomerSatisfaction DESC, PurchaseIntent DESC
     """)
     high_satisfaction.show()
-
-    # 6. Windowing and Ranking: Ranking products by Customer Satisfaction
-    from pyspark.sql.window import Window
-    print("Ranking products by Customer Satisfaction:")
-    windowSpec = Window.orderBy(col("CustomerSatisfaction").desc())
-    ranked_products = readProducts.withColumn("rank", rank().over(windowSpec))
-    ranked_products.select("ProductID", "ProductCategory", "ProductBrand", "CustomerSatisfaction", "rank").show()
 
 
 
