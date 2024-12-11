@@ -52,13 +52,11 @@ if __name__ == "__main__":
     """)
     total_purchase_frequency.show()
     
-    from pyspark.sql.window import Window
-    print("Ranking products by Customer Satisfaction:")
-    windowSpec = Window.orderBy(col("CustomerSatisfaction").desc())
-    ranked_products = readProducts.withColumn("rank", rank().over(windowSpec))
-    ranked_products.select("ProductID", "ProductCategory", "ProductBrand", "CustomerSatisfaction", "rank").show()
-
-
+    # from pyspark.sql.window import Window
+    # print("Ranking products by Customer Satisfaction:")
+    # windowSpec = Window.orderBy(col("CustomerSatisfaction").desc())
+    # ranked_products = readProducts.withColumn("rank", rank().over(windowSpec))
+    # ranked_products.select("ProductID", "ProductCategory", "ProductBrand", "CustomerSatisfaction", "rank").show()
 
 
     spark.stop()
