@@ -44,20 +44,6 @@ if __name__ == "__main__":
     readProducts.createOrReplaceTempView("products")
 
 
-    print("Products with price below 1000:")
-    low_price_products = spark.sql("SELECT ProductID, ProductCategory, ProductPrice FROM products WHERE ProductPrice < 1000")
-    low_price_products.show()
-
-    # 2. Grouping and Aggregation: Calculate average price per category
-    print("Average price per product category:")
-    avg_price_per_category = spark.sql("""
-        SELECT ProductCategory, AVG(ProductPrice) AS avg_price
-        FROM products
-        GROUP BY ProductCategory
-        ORDER BY avg_price DESC
-    """)
-    avg_price_per_category.show()
-
     # 3. Grouping by multiple columns: Find the total purchase frequency per category and brand
     print("Total purchase frequency per category and brand:")
     total_purchase_frequency = spark.sql("""
@@ -77,11 +63,6 @@ if __name__ == "__main__":
         ORDER BY CustomerSatisfaction DESC, PurchaseIntent DESC
     """)
     high_satisfaction.show()
-
-    # 5. Statistical summary (e.g., Price, Age, Frequency)
-    print("Statistical summary of Product Price, Customer Age, and Purchase Frequency:")
-    stats = readProducts.select("ProductPrice", "CustomerAge", "PurchaseFrequency")
-    stats.describe().show()
 
     # 6. Windowing and Ranking: Ranking products by Customer Satisfaction
     from pyspark.sql.window import Window
