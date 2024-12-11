@@ -1,5 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
+from pyspark.sql.functions import col, rank
+from pyspark.sql.window import Window
 
 def parseInput(line):
     fields = line.split(',')
@@ -51,12 +53,11 @@ if __name__ == "__main__":
         ORDER BY total_purchase_frequency DESC
     """)
     total_purchase_frequency.show()
-    
-    # from pyspark.sql.window import Window
-    # print("Ranking products by Customer Satisfaction:")
-    # windowSpec = Window.orderBy(col("CustomerSatisfaction").desc())
-    # ranked_products = readProducts.withColumn("rank", rank().over(windowSpec))
-    # ranked_products.select("ProductID", "ProductCategory", "ProductBrand", "CustomerSatisfaction", "rank").show()
+
+    print("Ranking products by Customer Satisfaction:")
+    windowSpec = Window.orderBy(col("CustomerSatisfaction").desc())
+    ranked_products = readProducts.withColumn("rank", rank().over(windowSpec))
+    ranked_products.select("ProductID", "ProductCategory", "ProductBrand", "CustomerSatisfaction", "rank").show()
 
 
     spark.stop()
